@@ -5,7 +5,7 @@
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "FunctionName": "GeminiMarket",
-        "Handler": "handler.lambda_handler",
+        "Handler": "gemini_market.lambda_handler",
         "Role": {
           "Fn::GetAtt": [
             "GeminiMarketRole",
