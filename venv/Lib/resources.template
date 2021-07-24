@@ -20,6 +20,21 @@
         "Timeout": 300
       }
     },
+    "GeminiMarketSchedule": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Name": "GeminiMarketSchedule",
+        "Description": "Triggers a download of Gemini market",
+        "ScheduleExpression": "rate(15 minutes)",
+        "Targets": [{
+          "Id": "GeminiMarketScheduleTarget",
+          "Arn": {
+            "Fn::GetAtt": [ "GeminiMarket", "Arn" ]
+          }
+        }],
+        "State": "ENABLED"
+      }
+    },
     "GeminiMarketRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -64,6 +79,15 @@
             }]
           }
         }]
+      }
+    },
+    "GeminiMarketScheduleInvokeLambdaPermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": { "Ref": "GeminiMarket" },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "events.amazonaws.com",
+        "SourceArn": { "Fn::GetAtt": [ "GeminiMarketSchedule", "Arn" ] }
       }
     }
   }
