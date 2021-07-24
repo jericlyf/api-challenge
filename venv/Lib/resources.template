@@ -1,0 +1,72 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "GeminiMarket": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "FunctionName": "GeminiMarket",
+        "Handler": "handler.lambda_handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "GeminiMarketRole",
+            "Arn"
+          ]
+        },
+        "Code": {
+          "S3Bucket": "tdf-gemini-challenge",
+          "S3Key": "code/api_challenge.zip"
+        },
+        "Runtime": "python3.7",
+        "Timeout": 300
+      }
+    },
+    "GeminiMarketRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "GeminiMarketRole",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [{
+            "Effect": "Allow",
+            "Principal": {
+              "Service": [ "lambda.amazonaws.com" ]
+            },
+            "Action": [ "sts:AssumeRole" ]
+          }]
+        },
+        "Path": "/",
+        "Policies": [{
+          "PolicyName": "AWSLambdaBasicExecutionRole",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": "*"
+            }]
+          }
+        },
+        {
+          "PolicyName": "AmazonS3FullAccess",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [{
+              "Effect": "Allow",
+              "Action": "s3:*",
+              "Resource": [
+                "arn:aws:s3:::tdf-gemini-challenge",
+                "arn:aws:s3:::tdf-gemini-challenge/*"
+              ]
+            }]
+          }
+        }]
+      }
+    }
+  }
+}
+
+
