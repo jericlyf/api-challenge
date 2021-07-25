@@ -104,4 +104,3 @@ def publish_failed():
         }
     )
     return response
-
